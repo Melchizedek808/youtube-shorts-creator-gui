@@ -1,0 +1,109 @@
+
+╔══════════════════════════════════════════════════════════════╗
+║      YouTube Shorts Creator v2.0 - Quick Start Guide        ║
+╚══════════════════════════════════════════════════════════════╝
+
+📥 INSTALLATION (Windows)
+═════════════════════════════════════════════════════════════
+1. Download the ZIP file
+2. Extract all files to a folder (e.g., Desktop)
+3. Double-click "YouTube Shorts Creator.exe"
+4. Done! No Python installation needed
+
+⚠️  Windows Security Warning?
+   → Click "More info" then "Run anyway"
+   → The app is safe, just not digitally signed yet
+
+
+🚀 QUICK START - 4 SIMPLE STEPS
+═════════════════════════════════════════════════════════════
+
+STEP 1: Select Files
+────────────────────
+• Original Video (Top): Your main content
+• Reaction Video (Bottom): Your reaction with audio
+• Background Music: Any MP3 or music file
+
+
+STEP 2: Choose Caption Mode
+────────────────────────────
+• 🤖 Auto: Transcribes your speech automatically (Recommended)
+• ✍️ Manual: Type your own text (e.g., "THE DOG MAN")
+• ❌ None: No captions
+
+
+STEP 3: Select Output
+──────────────────────
+• Click Browse next to "Save As"
+• Choose where to save (Desktop is easy)
+• Give it a name (e.g., "my_short.mp4")
+
+
+STEP 4: Create!
+────────────────
+• Click "Create YouTube Short"
+• Wait 2-10 minutes (grab a coffee ☕)
+• Your video will be ready!
+
+
+⏱️  PROCESSING TIME
+═════════════════════════════════════════════════════════════
+• 15-30 sec video: ~2-5 minutes
+• 30-60 sec video: ~5-10 minutes
+• First time using Auto: Add 2-3 minutes (downloading AI)
+
+
+💡 PRO TIPS
+═════════════════════════════════════════════════════════════
+✅ Use high-quality videos (720p or 1080p)
+✅ Speak clearly for better auto-captions
+✅ Keep videos under 60 seconds
+✅ Choose "base" Whisper model (best balance)
+✅ Make sure you have 5GB+ free space
+
+
+🎯 PERFECT FOR
+═════════════════════════════════════════════════════════════
+• YouTube Shorts
+• Instagram Reels
+• TikTok videos
+• Facebook Reels
+• Any vertical video content!
+
+
+📊 OUTPUT SPECS
+═════════════════════════════════════════════════════════════
+Resolution: 1080x1920 (9:16 vertical)
+Format: MP4 (H.264)
+Audio: Reaction + Music (Original muted)
+Captions: Yellow background, black text
+
+
+❓ NEED HELP?
+═════════════════════════════════════════════════════════════
+
+Problem: App won't start
+Solution: Right-click .exe → Run as Administrator
+
+Problem: Error during creation
+Solution: Check console output, ensure files are valid
+
+Problem: Auto-captions don't work
+Solution: Try "tiny" model or use manual captions
+
+Problem: Takes too long
+Solution: Use shorter videos or "tiny" Whisper model
+
+
+📚 MORE INFO
+═════════════════════════════════════════════════════════════
+• Full Guide: Read README.md
+• User Guide: Read WINDOWS_USER_GUIDE.md
+• Developer Info: Read DEVELOPER_GUIDE.md
+
+
+🎉 YOU'RE READY!
+═════════════════════════════════════════════════════════════
+Go create some amazing shorts!
+
+Happy creating! 🎬✨
