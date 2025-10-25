@@ -206,6 +206,22 @@ Your finished YouTube Short will have:
   - Try using manual caption mode as a fallback
   - Ensure you have 2-5GB free disk space for AI model
 
+### Permission Denied Error (Windows)
+- **Issue**: "[Errno 13] Permission denied: 'C:\\Users\\User\\.cache\\whisper\\base.pt'"
+- **What's happening**: The app cannot write to the default cache directory
+- **Solutions** (app automatically tries these):
+  - ✅ App will automatically try multiple cache locations:
+    1. User cache directory (`C:\Users\[User]\.cache\whisper`)
+    2. Documents folder (`C:\Users\[User]\Documents\.whisper_cache`)
+    3. Windows temp directory (`C:\Users\[User]\AppData\Local\Temp\whisper_cache`)
+    4. Application folder (where the app is located)
+  - If all fail, try these manual fixes:
+    - Run the application as Administrator (right-click > Run as administrator)
+    - Create the folder manually: `C:\Users\[YourUsername]\.cache\whisper`
+    - Move the app to a location you have full permissions (e.g., Desktop or Documents)
+    - Check your antivirus isn't blocking file creation
+  - **Note**: The Whisper model files are large (100MB-1GB) and need to be downloaded once
+
 ### Slow processing
 - **Issue**: Taking forever to create video
 - **Solutions**:

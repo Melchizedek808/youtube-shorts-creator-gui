@@ -6,6 +6,8 @@ Creates vertical 9:16 videos with reaction overlay and automatic styled captions
 """
 
 import tempfile
+import os
+import sys
 from pathlib import Path
 from moviepy.editor import (
     VideoFileClip, AudioFileClip, CompositeVideoClip, 
@@ -69,6 +71,59 @@ class ShortsCreator:
             if not file_path.exists():
                 raise FileNotFoundError(f"File not found: {file_path}")
     
+    def _get_whisper_cache_dir(self):
+        """
+        Get a writable cache directory for Whisper models
+        Tries multiple locations with fallbacks for Windows permission issues
+        """
+        # Try multiple cache locations in order of preference
+        cache_locations = []
+        
+        # 1. Default user cache directory
+        if sys.platform == 'win32':
+            default_cache = Path.home() / '.cache' / 'whisper'
+        else:
+            default_cache = Path.home() / '.cache' / 'whisper'
+        cache_locations.append(default_cache)
+        
+        # 2. User Documents folder (Windows friendly)
+        documents_cache = Path.home() / 'Documents' / '.whisper_cache'
+        cache_locations.append(documents_cache)
+        
+        # 3. Temp directory fallback
+        temp_cache = Path(tempfile.gettempdir()) / 'whisper_cache'
+        cache_locations.append(temp_cache)
+        
+        # 4. Local application directory
+        local_cache = Path(__file__).parent / 'whisper_cache'
+        cache_locations.append(local_cache)
+        
+        # Try each location
+        for cache_dir in cache_locations:
+            try:
+                # Create directory if it doesn't exist
+                cache_dir.mkdir(parents=True, exist_ok=True)
+                
+                # Test write permissions by creating a test file
+                test_file = cache_dir / '.write_test'
+                test_file.touch()
+                test_file.unlink()
+                
+                print(f"   ✓ Using Whisper cache directory: {cache_dir}")
+                return str(cache_dir)
+                
+            except (PermissionError, OSError) as e:
+                print(f"   ⚠️ Cannot use {cache_dir}: {e}")
+                continue
+        
+        # If all locations fail, raise an error with helpful message
+        raise PermissionError(
+            f"Cannot find a writable directory for Whisper models.\n"
+            f"Tried locations:\n" + 
+            "\n".join([f"  - {loc}" for loc in cache_locations]) +
+            f"\n\nPlease ensure you have write permissions or run as administrator."
+        )
+    
     def _transcribe_audio(self, video_path):
         """
         Transcribe audio from video using Whisper
@@ -77,29 +132,54 @@ class ShortsCreator:
         print(f"🎤 Transcribing audio with Whisper ({self.whisper_model} model)...")
         print("   ⏳ This may take a minute...")
         
-        # Load Whisper model
-        model = whisper.load_model(self.whisper_model)
+        try:
+            # Get a writable cache directory
+            cache_dir = self._get_whisper_cache_dir()
+            
+            # Load Whisper model with explicit cache location
+            print(f"   📥 Loading Whisper model (will download if needed)...")
+            model = whisper.load_model(self.whisper_model, download_root=cache_dir)
+            print(f"   ✓ Model loaded successfully")
+            
+        except PermissionError as e:
+            print(f"   ❌ Permission Error: {e}")
+            raise
+        except Exception as e:
+            print(f"   ❌ Error loading Whisper model: {e}")
+            raise RuntimeError(
+                f"Failed to load Whisper model. Error: {e}\n"
+                f"Try running the application as administrator or check your internet connection."
+            )
         
-        # Transcribe with word-level timestamps
-        result = model.transcribe(
-            str(video_path),
-            word_timestamps=True,
-            language='en'  # You can make this configurable
-        )
-        
-        # Extract word-level segments
-        word_segments = []
-        for segment in result['segments']:
-            if 'words' in segment:
-                for word in segment['words']:
-                    word_segments.append({
-                        'word': word['word'].strip(),
-                        'start': word['start'],
-                        'end': word['end']
-                    })
-        
-        print(f"   ✓ Transcribed {len(word_segments)} words")
-        return word_segments
+        try:
+            # Transcribe with word-level timestamps
+            print(f"   🎯 Transcribing audio...")
+            result = model.transcribe(
+                str(video_path),
+                word_timestamps=True,
+                language='en'  # You can make this configurable
+            )
+            
+            # Extract word-level segments
+            word_segments = []
+            for segment in result['segments']:
+                if 'words' in segment:
+                    for word in segment['words']:
+                        word_segments.append({
+                            'word': word['word'].strip(),
+                            'start': word['start'],
+                            'end': word['end']
+                        })
+            
+            print(f"   ✓ Transcribed {len(word_segments)} words")
+            return word_segments
+            
+        except Exception as e:
+            print(f"   ❌ Error during transcription: {e}")
+            raise RuntimeError(
+                f"Failed to transcribe audio. Error: {e}\n"
+                f"Make sure the video file has audio and is not corrupted."
+            )
     
     def _chunk_words(self, word_segments, words_per_caption=4):
         """
